@@ -25,9 +25,36 @@ Repository for anything related to GM's 3.6L V6 code LFX
 |Camshaft|	Cast iron |
 |Connecting rods|	Sinter forged steel |
 
+|Spark Plug (AC 41-109) gap | 0.037 to 0.044 inch |
+
+## Firing order 1-2-3-4-5-6
+|  Front L (Bank2)| Front R (Bank1)|
+|    :----:   |    :----:   |
+| 2 | 1 |
+| 4 | 3 |
+| 6 | 5 |
+
 ## TODO - Traverse to Longitudinal swap parts list (for Swap into Miata/RX8 etc)
 
-## TODO - Hardware torque list
+## Hardware torque list \!\*\* USE AT OWN RISK \*\*\!
+| Item | TQ |
+|---|---|
+|Spark Plug 2012 and earlier | 15 Ft-lbs |
+|Spark Plug 2012 and later | 159 in-lbs |
+|Oil drain plug | 18 Ft-lbs |
+|Drivebelt tentioner bolts | 18 Ft-lbs |
+|(Manual) Flywheel bolts | 49 Ft-lbs |
+|Intake manifold bolts  | 18 Ft-lbs |
+|Engine Mount > Engine M8 | 16 Ft-lbs |
+|Engine Mount > Engine M10 | 45 Ft-lbs |
+|Valve cover bolts | 89 in-lbs |
+
+
+## Capacities
+| Item | volume |
+| --- | --- |
+|Oil Capacity (w filter) | 6 quarts |
+|Aision 6 SPD Trans | 1.9 quarts |
 
 ## Links
 - https://en.wikipedia.org/wiki/GM_High_Feature_engine#LFX
