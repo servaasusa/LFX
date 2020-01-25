@@ -63,3 +63,6 @@ Repository for anything related to GM's 3.6L V6 code LFX
 - https://www.keislerautomation.com/universal-lfx-products
 - https://forum.miata.net/vb/showthread.php?t=610911
 - https://www.miataturbo.net/build-threads-57/portabull-lfx-build-87186/
+
+## Videos
+- https://www.youtube.com/watch?v=1gpB41uueJw
