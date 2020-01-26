@@ -72,5 +72,9 @@ Repository for anything related to GM's 3.6L V6 code LFX
 - https://www.miataturbo.net/build-threads-57/portabull-lfx-build-87186/
 - https://www.facebook.com/groups/LFXV6Swap/
 
+## Shopping
+- https://www.wholesalegmpartsonline.com/showAssembly.aspx?ukey_assembly=375975&ukey_product=2992604
+
+
 ## Videos
 - https://www.youtube.com/watch?v=1gpB41uueJw
