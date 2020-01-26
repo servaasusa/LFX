@@ -56,6 +56,10 @@ Repository for anything related to GM's 3.6L V6 code LFX
 |Oil Capacity (w filter) | 6 quarts |
 |Aision 6 SPD Trans | 1.9 quarts |
 
+## Electrical
+- ECU E39
+- Ecu connectors Molex MX123 series(https://www.digikey.com/catalog/en/partgroup/mx123-series/36122?mpart=0345661303&vendor=23)
+
 ## Links
 - https://en.wikipedia.org/wiki/GM_High_Feature_engine#LFX
 - https://gmauthority.com/blog/gm/gm-engines/lfx/
