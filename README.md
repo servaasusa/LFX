@@ -59,6 +59,9 @@ Repository for anything related to GM's 3.6L V6 code LFX
 ## Electrical
 - ECU E39
 - Ecu connectors Molex MX123 series(https://www.digikey.com/catalog/en/partgroup/mx123-series/36122?mpart=0345661303&vendor=23)
+- ![E39 ECU](/Images/E39_ECU_X123.png)
+- [Pinout details](https://github.com/servaasusa/LFX/tree/master/pinout)
+- Will add Bench Flash Harness build DIY to Wiki later..
 
 ## Links
 - https://en.wikipedia.org/wiki/GM_High_Feature_engine#LFX
