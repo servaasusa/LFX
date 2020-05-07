@@ -1,0 +1,308 @@
+/************************************************************************\
+ *
+ * CES Vault Wiki
+ * Version 2.3.1
+ *
+ * Copyright ©2008-2009 Cracked Egg Studios. All Rights Reserved.
+ * This file may not be redistributed in whole or significant part.
+ * 
+ * VAULTWIKI IS NOT FREE SOFTWARE
+ * http://www.crackedeggstudios.com/vault/The-Arsenal:CES-VaultWiki
+ * http://www.crackedeggstudios.com/vault/VaultWiki-License-Agreement
+ *
+\************************************************************************/
+
+.vw-content {
+	margin: -2px 0 0;
+	padding: 1em;
+	line-height: 1.5em;
+	position: relative;
+	z-index: 2;
+}
+
+.vw-content h1, .vw-content h2, .vw-content h3,
+.vw-content h4, .vw-content h5, .vw-content h6 {
+	margin: 0;
+	padding: .5em 0 .17em;
+}
+
+.vw-content ul {
+	list-style-type: square;
+	line-height: 1.5em;
+	margin: .3em 0 0 1.5em;
+	padding: 0;
+}
+
+.vw-content ol {
+	list-style-image: none;
+	line-height: 1.5em;
+	margin: .3em 0 0 3.2em;
+	padding: 0;
+}
+
+.vw-broken {
+	background: none;
+	border: none;
+	padding: 0;
+}
+
+.template-ul {
+	width: 40%;
+	display: inline-block;
+}
+
+.vw-content li { margin-bottom: .2em; }
+
+.vw-content pre {
+	padding: 1em;
+	line-height: 1.1em;
+}
+
+.fh_content {
+	margin: 0;
+	padding: 3px;
+	padding-bottom: 16px;
+	border: none;
+}
+
+.contentSub {
+	line-height: 1.2em;
+	margin: -.6em 0 1.4em 1em;
+	width: auto;
+}
+
+.firstHeading {
+	line-height: 1.5em;
+	text-align: left;
+	padding-top: .5em;
+}
+
+.link-http { padding-right: 13px; }
+.link-https { padding-right: 16px; }
+.link-mailto, .link-news, .link-ftp, .link-irc { padding-right: 18px; }
+
+.content_form {
+	margin: -2px 0 0;
+	padding: 3px;
+	position: relative;
+	z-index: 2;
+}
+
+.p-cactions {
+	white-space: nowrap;
+	width: 99%;
+	border-collapse: collapse;
+	left: 0px;
+	list-style: none;
+	height: 21px;
+	padding-left: 6px;
+	margin: 0;
+}
+
+.p-cactions li {
+	float: left;
+	overflow: hidden;
+	margin: .1em .3em 0 0;
+	padding-bottom: 1px;
+	position: relative;
+	z-index: 0;
+	-moz-border-radius-topright: 2px;
+	-moz-border-radius-topleft: 2px;
+	-webkit-border-top-right-radius: 2px;
+	-webkit-border-top-left-radius: 2px;
+}
+
+.p-cactions .p-text {
+	text-transform: lowercase;
+	padding: 0 10px;
+	font-size: 13px;
+}
+
+.p-cactions li.selected {
+	padding: 0 2px 2px;
+	margin-top: 0;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	overflow: visible;
+	cursor: default;
+	z-index: 5;
+}
+
+.p-cactions li a { margin: 0px; }
+
+.p-cactions li.overflow_tab {
+	width: auto;
+	text-align: center;
+	font-weight: bold;
+	display: none;
+}
+
+.p-cactions li:hover {
+	margin-bottom: 1px;
+	padding-bottom: 1px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	z-index: 3;
+}
+
+.p-cactions li.selected:hover {
+	margin-bottom: .1em;
+	padding-bottom: 2px;
+}
+
+.p-cactions li#ca-talk_tab { margin-right: 1em; }
+.p-cactions li#ca-watch_tab, .p-cactions li#ca-unwatch_tab { margin-left: 1em; }
+
+.redirectText { margin: 5px; }
+
+.editsection {
+	font-size: 60%;
+	font-weight: normal;
+	float: right;
+	margin-left: 5px;
+}
+
+.special_footnote {
+	font-size: 62%;
+	line-height: 0.7em;
+	vertical-align: super;
+}
+
+.ratingBox {
+	float: right;
+	display: table-cell;
+	vertical-align: text-bottom;
+	margin-top: 1.4em;
+	text-align: right;
+	white-space: nowrap;
+}
+
+.QuickSection {
+	margin-top: -.2em;
+	padding: .2em;
+}
+
+.QuickSection .vBulletin_editor { border: none; }
+.vBulletin_editor.vw-content { padding: 3px; }
+.vw-content.bodyContent { padding: 0px; }
+
+.vw-content .imagebutton {
+	padding: 1px;
+	border: 1px outset #000;
+	margin: 0 1px 0 0;
+}
+
+.vw-content .ocolor {
+	padding: 2px;
+	margin: 1px;
+	border: 1px solid #000;
+}
+
+.vw-content .ocolor div {
+	width: 10px;
+	height: 10px;
+	border: 1px solid #ACA899;
+}
+
+.book_nav_bottom {
+	padding-top: 5px;
+	margin-top: 8px;
+}
+
+.book_nav_top {
+	padding-bottom: 5px;
+	margin-bottom: 8px;
+}
+
+.titleBox {
+	width: auto;
+	line-height: 1.7em;
+	padding-top: .5em;
+	margin-bottom: .6em;
+}
+
+.vw-content h1, .bodyContent h2 { margin-bottom: .6em; }
+.vw-content h3, .vw-content h4, .vw-content h5 { margin-bottom: .3em; }
+
+.special_ref_up a { font-size: 60%; }
+
+.new_alert, .old_alert {
+	margin-bottom: 0.5em;
+	padding: 0.5em 1em;
+	vertical-align: middle;
+}
+
+.special_diffs td { vertical-align: top; }
+.diff_unchanged, .diff_media { padding: 3px; }
+.diff_media { display: block; }
+
+.diff_unchanged, .diff_added, .diff_deleted, .diff_media {
+	margin-top: 6px;
+	padding: 3px;
+}
+
+#hist_list { margin-bottom: .3em; }
+#hist_list li { clear: both; }
+
+#hist_list li div {
+	padding-bottom: 200px;
+	margin-bottom: -200px;
+	overflow: hidden;
+}
+
+.hist_info span { padding-right: .6em; }
+
+.hist_info span.hist_date { padding: 0 .9em 0 .3em; }
+
+.versionhooks ul {
+	float: left;
+	padding-right: 1.2em;
+}
+
+.top_link {
+	display: inline;
+	float: right;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+h2 .top_link { margin-top: .3em; }
+h3 .top_link { margin-top: .2em; }
+h4 .top_link { margin-top: .13em; }
+
+.autolink_menu {
+	min-width: 250px;
+	width: 250px;
+	margin-top: 2px;
+}
+
+.autolink_preview { width: 100%; }
+.autolink_preview td { vertical-align: top; }
+
+.autolink_readmore {
+	margin-top: 10px;
+	text-align: right;
+}
+
+.toc_title h2 {
+	padding-top: 0;
+	margin-bottom: 0;
+}
+
+.toc_title a {
+	padding-top: 6px;
+	margin-left: 8px;
+}
+
+.toc_number { margin-right: 5px; }
+.chapter_number { margin-right: 10px; }
+
+.book_nav {
+	text-align: center;
+	clear: both;
+}
+
+/*======================================================================*\
+ * Downloaded: 15:34, Wed Jul 15th 2009
+ * Licensed to: http://camaro5.com
+\*======================================================================*/

@@ -1,0 +1,21 @@
+
+var ftGUID_4163795="440281AC8ADD58";
+var ftConfID_4163795="0";
+var ftParams_4163795="ftx=&fty=&ftadz=&ftscw=&ft_custom=&ftOBA=1&ft_ifb=1&ft_domain=www.camaro6.com&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fwww.camaro6.com%2Fforums%2Fshowthread.php%3Ft%3D469951%26highlight%3Dtsloper&cachebuster=951787.4517492137";
+var ftKeyword_4163795="";
+var ftCustom_4163795="";
+var ftSection_4163795="";
+var ftSegment_4163795="xp8";
+var ftSegmentList_4163795=[{s:'xp8'}];
+var ftRuleMatch_4163795="0";
+var ftTimestamp_4163795="1580626217";
+var ftImp4163795 = {};
+ftImp4163795.privacy = "x";
+ftImp4163795.guidAge = "13";
+ftImp4163795.impID = "855BA133-144F-EF7D-5C0F-EDB306FA23F1";
+ftImp4163795.duid = "FT:440281AC8ADD58";
+
+ftImp4163795.ft_tpplid = "";
+ftImp4163795.ft_c = {};
+
+document.write('<scr'+'ipt src="https://cdn.flashtalking.com/xre/416/4163795/2899701/js/j-4163795-2899701.js" id="ftscript_m4163795" name="ftscript_m4163795"></scr'+'ipt>');

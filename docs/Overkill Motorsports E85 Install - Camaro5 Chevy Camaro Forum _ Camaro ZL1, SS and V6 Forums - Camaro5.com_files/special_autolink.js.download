@@ -1,0 +1,297 @@
+/************************************************************************\
+ *
+ * CES Vault Wiki
+ * Version 2.3.1
+ *
+ * Copyright ©2008-2009 Cracked Egg Studios. All Rights Reserved.
+ * This file may not be redistributed in whole or significant part.
+ * 
+ * VAULTWIKI IS NOT FREE SOFTWARE
+ * http://www.crackedeggstudios.com/vault/The-Arsenal:CES-VaultWiki
+ * http://www.crackedeggstudios.com/vault/VaultWiki-License-Agreement
+ *
+\************************************************************************/
+
+function Special_AutoLink()
+{
+	this.previewVisible = 0;
+	this.hoverCurrentId = 0;
+	this.hoverTimerId = 0;
+	this.hoverAnchorObj = null;
+	this.hoverAnchorPos = null;
+
+	this.eventList = new Object();
+	this.previewObj = new Object();
+	this.articleData = new Object();
+
+	this.init();
+};
+
+Special_AutoLink.prototype.init = function()
+{
+	var autolinks = this.fetch_autolinks();
+
+	for (var i = 0; i < autolinks.length; i++)
+	{
+		YAHOO.util.Dom.addClass(autolinks[i], "autolink");
+		YAHOO.util.Event.on(autolinks[i], "mouseover", this.onmouseover, this, true);
+		YAHOO.util.Event.on(autolinks[i], "mouseout", this.onmouseout, this, true);
+	}
+};
+
+Special_AutoLink.prototype.fetch_autolinks = function()
+{
+	var links = document.getElementsByTagName("span");
+	var contlink, autolinks = new Array();
+
+	for (var i = 0; i < links.length; i++)
+	{
+		if (links[i].id && links[i].id.indexOf("autolink_") != -1)
+		{
+			contlink = links[i].getElementsByTagName("a")[0];
+
+			if (contlink)
+			{
+				contlink.targetid = parseInt(links[i].id.split("_")[1]);
+
+				if (contlink.targetid > 0)
+				{
+					autolinks[parseInt(autolinks.length)] = contlink;
+				}
+			}
+		}
+	}
+
+	return autolinks;
+};
+
+Special_AutoLink.prototype.preview_mouseover = function()
+{
+	if (!this.hoverTimerId)
+	{
+		return false;
+	}
+
+	clearTimeout(this.hoverTimerId);
+	this.hoverTimerId = 0;
+};
+
+Special_AutoLink.prototype.hide_preview = function()
+{
+	if (!this.articleData[this.hoverLinkId] || this.articleData[this.hoverLinkId].article_id != this.hoverLinkId)
+	{
+		return false;
+	}
+
+	if (vBmenu.menus[this.hoverCurrentId])
+	{
+		vBmenu.menus[this.hoverCurrentId].hide();
+	}
+
+	this.hoverCurrentId = 0;
+};
+
+Special_AutoLink.prototype.show_preview = function()
+{
+	if (this.articleData[this.hoverLinkId] != undefined)
+	{
+		this.cached_preview();
+		return false;
+	}
+
+	YAHOO.util.Dom.setStyle("cursor", "wait");
+
+	YAHOO.util.Connect.asyncRequest("POST", "ajax.php?do=autolink&t=" + this.hoverLinkId,
+	{
+		success: this.ajax_complete,
+		failure: this.ajax_failure,
+		timeout: 15000,
+		scope: this
+	}, SESSIONURL
+		+ 'do=autolink&t=' + this.hoverLinkId
+		+ '&securitytoken=' + PHP.urlencode(SECURITYTOKEN));
+};
+
+Special_AutoLink.prototype.cached_preview = function()
+{
+	if (this.articleData[this.hoverLinkId].article_id != this.hoverLinkId || !this.hoverCurrentId)
+	{
+		return false;
+	}
+
+	var previewObj = this.previewObj[this.hoverCurrentId];
+
+	if (!previewObj)
+	{
+		previewObj = YAHOO.util.Dom.get(this.hoverCurrentId + "_menu");
+
+		if (!previewObj)
+		{
+			previewObj = document.createElement("div");
+
+			if (!previewObj)
+			{
+				return false;
+			}
+
+			previewObj.setAttribute("id", this.hoverCurrentId + "_menu");
+			YAHOO.util.Dom.addClass(previewObj, "autolink_menu");
+			previewObj.innerHTML = this.articleData[this.hoverLinkId].content;
+
+			document.body.appendChild(previewObj);
+		}
+
+		YAHOO.util.Event.on(previewObj, "mouseover", this.onmouseover_popup, previewObj, true);
+		YAHOO.util.Event.on(previewObj, "mouseout", this.onmouseout, this, true);
+	}
+
+	if (!vBmenu.menus[this.hoverCurrentId])
+	{
+		vBmenu.register(this.hoverCurrentId, true);
+
+		// vbmenu_register makes onclick return false
+		YAHOO.util.Event.on(this.hoverAnchorObj, "click", this.onclick_hover, this, true);
+	}
+
+	vBmenu.menus[this.hoverCurrentId].show(YAHOO.util.Dom.get(this.hoverCurrentId));
+	this.previewObj[this.hoverCurrentId] = previewObj;
+};
+
+Special_AutoLink.prototype.ajax_complete = function(ajax)
+{
+	if (ajax.responseXML)
+	{
+		YAHOO.util.Dom.setStyle(document.body, "cursor", "auto");
+
+		if (fetch_tag_count(ajax.responseXML, "error"))
+		{
+			// do nothing
+		}
+		else
+		{
+			var articleResponse = fetch_tags(ajax.responseXML, 'article')[0];
+
+			if (typeof(articleResponse) == "undefined")
+			{
+				return false;
+			}
+
+			var articleId = articleResponse.getAttribute("threadid1");
+			var redirectId = articleResponse.getAttribute("threadid2");
+
+			if (!articleId || !redirectId)
+			{
+				return false;
+			}
+
+			this.articleData[articleId] = {
+				'article_id' : articleId,
+				'title' : articleResponse.getAttribute("title"),
+				'content' :	articleResponse.firstChild.nodeValue
+			};
+
+			if (articleId == this.hoverLinkId)
+			{
+				this.cached_preview();
+			}
+
+			return false;
+		}
+	}
+};
+
+Special_AutoLink.prototype.ajax_failure = function(ajax)
+{
+	vBulletin_AJAX_Error_Handler(ajax);
+
+	YAHOO.util.Dom.setStyle("cursor", "auto");
+};
+
+// #############################################################################
+
+Special_AutoLink.prototype.onmouseover = function(e)
+{
+	YAHOO.util.Event.stopEvent(e);
+
+	var autolink = YAHOO.util.Event.getTarget(e);
+	var targetid = autolink.targetid;
+
+	if (!targetid || targetid == this.hoverCurrentId)
+	{
+		return false;
+	}
+
+	this.previewVisible = 1;
+	this.hoverCurrentId = autolink.parentNode.getAttribute("id");
+
+	if (this.hoverTimerId)
+	{
+		clearTimeout(this.hoverTimerId);
+	}
+
+	this.hoverLinkId = targetid;
+	this.hoverAnchorObj = autolink;
+
+	this.show_preview();
+
+	return false;
+};
+
+Special_AutoLink.prototype.onmouseout = function(e)
+{
+	YAHOO.util.Event.stopEvent(e);
+
+	this.preview_mouseover();
+	this.previewVisible = 0;
+
+	if (!this.previewVisible && this.hoverCurrentId)
+	{
+		this.hoverTimerId = setTimeout("SpecialAutoLink.hide_preview()", 500);
+	}
+};
+
+Special_AutoLink.prototype.onclick_hover = function(e)
+{
+	YAHOO.util.Event.stopEvent(e);
+
+	var autolink = YAHOO.util.Event.getTarget(e);
+	window.location = autolink.href;
+};
+
+Special_AutoLink.prototype.onmouseover_popup = function(e)
+{
+	YAHOO.util.Event.stopEvent(e);
+
+	var splitId = this.getAttribute("id").split("_");
+
+	SpecialAutoLink.hoverCurrentId = this.getAttribute("id").split("_menu")[0];
+
+	if (SpecialAutoLink.hoverTimerId)
+	{
+		clearTimeout(SpecialAutoLink.hoverTimerId);
+	}
+
+	SpecialAutoLink.hoverLinkId = splitId[1];
+	SpecialAutoLink.previewVisible = 1;
+};
+
+vB_Popup_Menu.prototype.hover = function(obj)
+{
+	if (vBmenu.activemenu != null && !SpecialAutoLink.hoverCurrentId)
+	{
+		if (vBmenu.menus[vBmenu.activemenu].controlkey != this.id)
+		{
+			this.show(obj, true);
+		}
+	}
+};
+
+// #############################################################################
+// initialize the editor class
+
+var SpecialAutoLink = new Special_AutoLink();
+
+/*======================================================================*\
+ * Downloaded: 15:34, Wed Jul 15th 2009
+ * Licensed to: http://camaro5.com
+\*======================================================================*/
