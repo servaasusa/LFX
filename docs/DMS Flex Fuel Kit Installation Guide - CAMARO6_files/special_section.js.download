@@ -1,0 +1,483 @@
+/************************************************************************\
+ *
+ * CES Vault Wiki
+ * Version 2.3.1
+ *
+ * Copyright ©2008-2009 Cracked Egg Studios. All Rights Reserved.
+ * This file may not be redistributed in whole or significant part.
+ * 
+ * VAULTWIKI IS NOT FREE SOFTWARE
+ * http://www.crackedeggstudios.com/vault/The-Arsenal:CES-VaultWiki
+ * http://www.crackedeggstudios.com/vault/VaultWiki-License-Agreement
+ *
+\************************************************************************/
+
+/**
+* Class to handle show/hide of headline sections
+*/
+function WikiPost_ShowSection()
+{
+	this.show = null;
+	this.hide = null;
+}
+
+/**
+* Finds all headlines in the post object
+*
+* @param	int		Unique ID for the containing post
+* @param	string	RegEx search string
+* @param	string	Tag name for the containing object
+*
+* @return	object	Object of div objects
+*/
+WikiPost_ShowSection.prototype.fetch_sections = function(postid, indexMatch, indexType)
+{
+	var postobj = fetch_object('post_message_' + postid);
+	var divs = fetch_tags(postobj, indexType);
+
+	var sections = Array();
+
+	for (var i = 0; i < divs.length; i++)
+	{
+		if (divs[i].id && divs[i].id.indexOf(indexMatch) != -1)
+		{
+			sections[parseInt(sections.length)] = divs[i];
+		}
+	}
+
+	return sections;
+}
+
+/**
+* Initializes all show/hide links so that they appear
+*
+* @return	boolean	false
+*/
+WikiPost_ShowSection.prototype.link_init = function(root)
+{
+	if (!root)
+	{
+		root = document;
+	}
+
+	var link_spans = YAHOO.util.Dom.getElementsByClassName("top_link", "span", root);
+	var j, inner_link, dash_node;
+
+	for (var i = 0; i < link_spans.length; i++)
+	{
+		for (j = 0; j < link_spans[i].childNodes.length; j++)
+		{
+			inner_link = link_spans[i].childNodes[j];
+
+			if (inner_link.id && inner_link.id.match(/collapseimg_/))
+			{
+				dash_node = document.createElement("span");
+				dash_node.id = 'colspan' + i;
+				dash_node.innerHTML = " - ";
+
+				YAHOO.util.Dom.insertAfter(dash_node, inner_link);
+				YAHOO.util.Dom.setStyle(inner_link, "display", "inline");
+			}
+		}
+	}
+
+	var collapseEQ = document.cookie.split("vbulletin_collapse=");
+
+	if (!collapseEQ[1])
+	{
+		return false;
+	}
+
+	var collapseFind = collapseEQ[1].split(";"), findReg = null, finder = null;
+	var collapses = collapseFind[0].split("%0A");
+
+	for (var i = 0; i < collapses.length; i++)
+	{
+		if (finder = YAHOO.util.Dom.get("collapseobj_" + collapses[i]))
+		{
+			YAHOO.util.Dom.setStyle(finder, "display", "none");
+		}
+
+		if (finder = YAHOO.util.Dom.get("collapseimg_" + collapses[i]))
+		{
+			findReg = new RegExp("(thead|tcat)\\.gif$");
+
+			if (finder.src)
+			{
+				finder.src = finder.src.replace(findReg, '$1_collapsed.gif');
+			}
+			else if (finder.innerHTML == this.hide)
+			{
+				finder.innerHTML = this.show;
+			}
+		}
+
+		if (finder = YAHOO.util.Dom.get("collapsecel_" + collapses[i]))
+		{
+			YAHOO.util.Dom.replaceClass(finder, "thead", "thead_collapsed");
+			YAHOO.util.Dom.replaceClass(finder, "tcat", "tcat_collapsed");
+		}
+	}
+
+	return false;
+};
+
+/**
+* Toggles the display states of options in the title popup object
+*
+* @param	int		Unique ID for the containing post
+*
+* @return	boolean	false
+*/
+WikiPost_ShowSection.prototype.Popup_Init = function(postid)
+{
+	var showall = fetch_object('collapseimg_' + postid + '_show');
+	var hideall = fetch_object('collapseimg_' + postid + '_hide');
+
+	if (!showall && !hideall)
+	{
+		return false;
+	}
+
+	var tocids = this.fetch_sections(postid, 'toc_', 'table');
+	var toccol = this.fetch_sections(postid, 'collapseobj_toc_', 'tbody');
+	var sectionids = this.fetch_sections(postid, 'collapseobj_' + postid + '_', 'div');
+
+	if (tocids.length > 0)
+	{
+		var colsave = '';
+
+		for (var k = 0; k < tocids.length; k++)
+		{
+			// tricky way to preserve toc width
+			colsave = toccol[k].style.display;
+			toccol[k].style.display = '';
+			tocids[k].style.width = tocids[k].offsetWidth + 'px';
+			toccol[k].style.display = colsave;
+		}
+	}
+
+	if (sectionids.length == 0)
+	{
+		return false;
+	}
+
+	for (var i = 0; i < sectionids.length; i++)
+	{
+		if (sectionids[i].style.display == 'none')
+		{
+			var hidden = true;
+		}
+		else
+		{
+			var shown = true;
+		}
+
+		if (hidden && shown)
+		{
+			break;
+		}	
+	}
+
+	if (showall != null && !hidden)
+	{
+		showall.style.display = 'none';
+	}
+
+	if (hideall != null && !shown)
+	{
+		hideall.style.display = 'none';
+	}
+
+	return false;
+}	
+	
+/**
+* Toggles the collapse state of an object, and saves state to 'vbulletin_collapse' cookie
+*
+* @param	string	Unique ID for the collapse group
+*
+* @return	boolean	false
+*/
+WikiPost_ShowSection.prototype.toggle = function(postid, sectionid)
+{
+	var sectionids = Array();
+	var img = null;
+	var obj = null;
+	var imgid = '';
+
+	if (sectionid == 'showall' || sectionid == 'hideall')
+	{
+		// get all the objids and put them in the var
+		sectionids = this.fetch_sections(postid, 'collapseobj_' + postid + '_', 'div');
+	}
+	else
+	{
+		sectionids[0] = fetch_object('collapseobj_' + postid + '_' + sectionid);
+	}
+
+	for (var i = 0; i < sectionids.length; i++)
+	{
+		obj = sectionids[i];
+		imgid = obj.id.replace('obj', 'img');
+
+		if (sectionid == 'showall' || sectionid == 'hideall')
+		{
+			img = fetch_object(imgid);
+		}
+		else
+		{
+			img = fetch_object('collapseimg_' + postid + '_' + sectionid);
+		}
+
+		if (!obj)
+		{
+			return false;
+		}
+
+		if (obj.style.display == 'none' && sectionid != 'hideall')
+		{
+			obj.style.display = '';
+
+			if (sectionid == 'showall')
+			{
+				save_collapsed(obj.id.replace('collapseobj_', ''), false);
+			}
+			else
+			{
+				save_collapsed(postid + '_' + sectionid, false);
+			}
+
+			if (img)
+			{
+				img.innerHTML = this.hide;
+			}
+		}
+		else if (sectionid != 'showall')
+		{
+			obj.style.display = 'none';
+
+			if (sectionid == 'hideall')
+			{
+				save_collapsed(obj.id.replace('collapseobj_', ''), true);
+			}
+			else
+			{
+				save_collapsed(postid + '_' + sectionid, true);
+			}
+
+			if (img)
+			{
+				img.innerHTML = this.show;
+			}
+		}
+	}
+
+	var showall = null;
+	var hideall = null;
+
+	if (
+		(showall = fetch_object('collapseimg_' + postid + '_show')) != null &&
+		(hideall = fetch_object('collapseimg_' + postid + '_hide')) != null
+	)
+	{
+		if (sectionid == 'showall')
+		{
+			showall.style.display = 'none';
+		}
+		else
+		{
+			showall.style.display = '';
+		}
+
+		if (sectionid == 'hideall')
+		{
+			hideall.style.display = 'none';
+		}
+		else
+		{
+			hideall.style.display = '';
+		}
+	}
+
+	if (sectionid != 'showall' && sectionid != 'hideall')
+	{
+		this.Popup_Init(postid);
+	}
+
+	return false;
+}
+
+/**
+* Fix for anchor URLs
+*
+* @param	string	name
+*
+* @return	boolean false
+*/
+Toc_Jump = function(ancname)
+{
+	if (ancname.indexOf('footnote_') != -1 || ancname.indexOf('ref') != -1)
+	{
+		var anchor = document.getElementById(ancname);
+		anchor.setAttribute("footnote", 1);
+	}
+	else
+	{
+		var anchor = document.getElementsByName(ancname)[0];
+	}
+
+	if (anchor)
+	{
+		if (anchor.getAttribute("footnote") == 1)
+		{
+			var select_anc = YAHOO.util.Dom.getElementsByClassName("ref_select", "span");
+			if (select_anc && select_anc.length)
+			{
+				for (var q = 0; q < select_anc.length; q++)
+				{
+					if (YAHOO.util.Dom.hasClass(select_anc[q], "ref_select"))
+					{
+						YAHOO.util.Dom.removeClass(select_anc[q], "ref_select");
+					}
+				}
+			}
+
+			YAHOO.util.Dom.addClass(anchor, "ref_select");
+		}
+
+		if (anchor.scrollIntoView)
+		{
+			anchor.scrollIntoView(true);
+		}
+	}
+
+	return false;
+};
+
+/**
+* Fix for anchor URLs on edit preview
+*
+* @param	string	name
+*
+* @return	boolean false
+*/
+Toc_Create_URLs = function(parentid)
+{
+	var toc = YAHOO.util.Dom.get(parentid);
+	var links = YAHOO.util.Dom.getElementsByClassName("toc_gen_url", "span", toc);
+	var anchor = null;
+
+	if (!links.length)
+	{
+		return false;
+	}
+
+	for (i = 0; i < links.length; i++)
+	{
+		anchor[i] = document.createElement("a");
+		anchor[i].href = links[i].name;
+		anchor[i].innerHTML = links[i].innerHTML;
+
+		links[i].parentNode.appendChild(anchor[i]);
+		links[i].parentNode.removeChild(links[i]);
+	}
+}
+
+/**
+* Rewrite of PostBit_Init
+*
+* @param	object	postbit
+* @param	integer	post id
+*/
+PostBit_Init = function(obj, postid)
+{
+	console.log("PostBit Init: %d", postid);
+
+	if (typeof vBmenu != 'undefined')
+	{
+		// init profile menu(s)
+		var divs = fetch_tags(obj, 'div');
+		for (var i = 0; i < divs.length; i++)
+		{
+			if (divs[i].id && divs[i].id.substr(0, 9) == 'postmenu_')
+			{
+				vBmenu.register(divs[i].id, true);
+			}
+		}
+	}
+
+	if (typeof SpecialAutoLink != 'undefined')
+	{
+		SpecialAutoLink = new Special_AutoLink();
+	}
+
+	if (fetch_object("posts"))
+	{
+		var newpost = fetch_object("posts").getElementsByTagName("table")[0];
+		if (newpost)
+		{
+			// there is at least one visible post, so post count may have changed
+			var talk_tab = fetch_object("ca-talk_tab");
+			if (talk_tab && YAHOO.util.Dom.hasClass(talk_tab, "selected"))
+			{
+				vB_WikiTabs[tab_container].load_tab_content("ca-article");
+			}
+		}
+	}
+
+	if (typeof vB_Section != 'undefined')
+	{
+		// reset show/hide links
+		vB_Section.link_init();
+	}
+
+	if (typeof vB_QuickEditor != 'undefined')
+	{
+		// init quick edit controls
+		vB_AJAX_QuickEdit_Init(obj);
+	}
+
+	if (typeof vB_QuickReply != 'undefined')
+	{
+		// init quick reply button
+		qr_init_buttons(obj);
+	}
+
+	if (typeof mq_init != 'undefined')
+	{
+		// init quick reply button
+		mq_init(obj);
+	}
+
+	if (typeof vBrep != 'undefined')
+	{
+		if (typeof postid != 'undefined' && typeof postid != 'null')
+		{
+			vbrep_register(postid);
+		}
+	}
+
+	if (typeof inlineMod != 'undefined')
+	{
+		im_init(obj);
+	}
+
+	if (typeof vB_Lightbox != 'undefined')
+	{
+		init_postbit_lightbox(obj);
+	}
+
+	child_img_alt_2_title(obj);
+};
+
+// #############################################################################
+// initialize the section class
+
+var vB_Section = new WikiPost_ShowSection();
+var ajax_load_url = [];
+
+/*======================================================================*\
+ * Downloaded: 15:34, Wed Jul 15th 2009
+ * Licensed to: http://camaro5.com
+\*======================================================================*/
