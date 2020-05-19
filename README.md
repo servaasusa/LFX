@@ -28,11 +28,7 @@ Repository for anything related to GM's 3.6L V6 code LFX
 |Spark Plug (AC 41-109) gap | 0.037 to 0.044 inch |
 
 ## Firing order 1-2-3-4-5-6
-|  Front L (Bank2)| Front R (Bank1)|
-|    :----:   |    :----:   |
-| 2 | 1 |
-| 4 | 3 |
-| 6 | 5 |
+![](https://github.com/servaasusa/LFX/raw/master/Images/ENGdiagTop.gif)
 
 ## TODO - Traverse to Longitudinal swap parts list (for Swap into Miata/RX8 etc)
 
